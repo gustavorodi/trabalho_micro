@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Portal de Cursos</title>
+</head>
+<body>
+    <div id="app" class="container">
+        <template v-if="carregando">
+            Loading ...
+        </template>
+        <template v-else>
+            <div class="row mt-3"> 
+                <div v-for="i in listaDePessoas" class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ i.nome }}</h5>
+                            <p class="card-text">{{ i.descricao }}</p>
+                            <p class="card-text"><b>Categoria</b>: {{ i.genero.descricao }}</p>
+                            <a href="#" class="btn btn-primary">Saber mais</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+
+</body>
+<script>
+
+var app = new Vue({
+    el: '#app',
+    
+    data () {
+        return {
+            message: 'dayan',
+            listaDePessoas:null,
+            info: null,
+            carregando: false,
+            errored: false
+        }
+    },
+    mounted () {
+        this.carregando = true
+
+        const url = `http://localhost:8000/curso/`;
+        fetch(url).then(response => 
+        {
+            console.log(response)
+
+            return response.json()
+        }).then(data=> { 
+
+            this.listaDePessoas = data.item
+            this.carregando = false
+        }).catch(() => {
+            this.carregando = false
+        })
+    },
+    methods: {
+        horario(value){
+            var horario = value.split('T')
+            horario = horario[0].split('-')
+            return `${horario[2]}/${horario[1]}/${horario[0]}`
+        }
+    }
+})
+    // var p = document.getElementById('nome')
+    // p.style.cssText = "color: red";
+    // p.innerHTML= 'Dayan'
+
+</script>
+</html>
